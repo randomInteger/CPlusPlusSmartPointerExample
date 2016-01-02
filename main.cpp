@@ -48,7 +48,7 @@ int main(int argc, const char * argv[]) {
     cleansUp();
 
     //Set a breakpoint anywhere below and inspect the memory usage, the only heap allocated memory
-    //should be from the object controlled by myInteger which has not dropped out of scope.
+    //from main() should be from the object controlled by myInteger which has not dropped out of scope.
     
     //Uncomment the two lines below to introduce a memory leak for testing purposes
     //Create an array of 4096 integers on the heap, never call delete.
