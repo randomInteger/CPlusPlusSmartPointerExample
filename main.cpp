@@ -11,12 +11,10 @@
 
 void cleansUp() {
     std::unique_ptr<int> tempInteger(new int(4096));
-    
-    std::cout << "Address of tempInteger smart pointer is: " << &tempInteger << "\n";
-    
+    std::cout << "\nAddress of new tempInteger smart pointer is: " << &tempInteger << "\n";
     std::cout << "Address of tempInteger's managed object is: " << tempInteger.get() << "\n";
-    
     std::cout << "Value of tempInteger pointer is: " << *tempInteger << "\n";
+    std::cout << "tempInteger is about to be destroyed as this function ends.\n";
     
     //as soon as tempInteger object of type unique_ptr drops out of scope, the
     //object it controls is deallocated automatically.
@@ -24,31 +22,43 @@ void cleansUp() {
 
 int main(int argc, const char * argv[]) {
 
-    //lets use the std::unique_ptr smart pointer and test it
+    //lets use the std smart pointer and test it
     std::unique_ptr<int> myInteger(new int(1024));
-
-    std::cout << "Address of myInteger smart pointer is: " << &myInteger << "\n";
-    
+    std::cout << "\nAddress of new myInteger smart pointer is: " << &myInteger << "\n";
     std::cout << "Address of myInteger's managed object is: " << myInteger.get() << "\n";
-    
     std::cout << "Value of myInteger pointer is: " << *myInteger << "\n";
     
     //just an example of how we can still use a basic dereference and assignment
     //like a raw pointer
     *myInteger = 2048;
-    
-    std::cout << "Address of myInteger pointer is: " << &myInteger << "\n";
-    
+    std::cout << "\nAddress of myInteger pointer is: " << &myInteger << "\n";
     std::cout << "Address of myInteger's managed object is: " << myInteger.get() << "\n";
-    
-    std::cout << "Value of myInteger pointer is: " << *myInteger << "\n";
+    std::cout << "New value of myInteger pointer is: " << *myInteger << "\n";
 
     //this function will allocate heap memory and that memory is freed when the function
     //returns and scope is lost.
     cleansUp();
 
+    //Another experiment, lets verify that using std::move changes ownership
+    std::unique_ptr<int> myTransfer(new int(64));
+    std::cout << "\nAddress of new myTransfer pointer is: " << &myTransfer << "\n";
+    std::cout << "Address of myTransfer's managed object is: " << myTransfer.get() << "\n";
+    std::cout << "Value of myTransfer pointer is: " << *myTransfer << "\n";
+    auto tempInteger2 = std::move(myTransfer);
+    if(myTransfer) {
+        std::cout << "\nmyTransfer still has ownership of its integer! Error!\n";
+    }else{
+        std::cout << "\nmyTransfer no longer owns its integer.\n";
+    }
+    if(tempInteger2) {
+        std::cout << "\ntempInteger2 now owns the integer\n";
+        std::cout << "\nAddress of tempInteger2 pointer is: " << &tempInteger2 << "\n";
+        std::cout << "Address of tempInteger2's managed object is: " << tempInteger2.get() << "\n";
+        std::cout << "Value of tempInteger2's pointer is: " << *tempInteger2 << "\n";
+    }
+    
     //Set a breakpoint anywhere below and inspect the memory usage, the only heap allocated memory
-    //from main() should be from the object controlled by myInteger which has not dropped out of scope.
+    //should be from the object controlled by myInteger which has not dropped out of scope.
     
     //Uncomment the two lines below to introduce a memory leak for testing purposes
     //Create an array of 4096 integers on the heap, never call delete.
