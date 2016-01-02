@@ -24,7 +24,7 @@ void cleansUp() {
 
 int main(int argc, const char * argv[]) {
 
-    //lets use the std smart pointer and test it
+    //lets use the std::unique_ptr smart pointer and test it
     std::unique_ptr<int> myInteger(new int(1024));
 
     std::cout << "Address of myInteger smart pointer is: " << &myInteger << "\n";
